@@ -12,7 +12,7 @@ int main(int argc, char *argv[]) {
 	ssize_t read;
 	FILE *file = fopen(argv[1], "r");
 	int nameIndex = -1;
-	//char **names = malloc(20000);
+	char *names[20000];
 	int num = 0;
 	
 	while((read = getline(&line, &len, file)) != -1) {
@@ -28,16 +28,15 @@ int main(int argc, char *argv[]) {
 		}
 		else{
 			char *name = getName(line, nameIndex);
-			printf("%s\n", name);
-			// *names = name;
-			// name++;
-			// num++;
+			*(names + num) = malloc(strlen(name)+1);
+			strcpy(*(names+num), name);
+			num++;
 		}
 	}
 
-	/*for(int i = 0; i < num; i++) {
-		printf("%s\n", (*names-1-i));
-	}*/
+	for(int i = 0; i < num; i++) {
+		printf("%s\n", *(names+i));
+	}
 }
 
 char* getName(char *line, int index) {
