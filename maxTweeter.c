@@ -4,15 +4,55 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
+struct tweeter {
+	char *name;
+	int count;
+};
+
 char* getName(char *line, int index);
 char** getNames(char *filename, int *num);
+void insert(char* name, struct tweeter *tweeters, int *len);
+void updateOrder(int current, struct tweeter *tweeters);
 
 int main(int argc, char *argv[]) {
 	char *filename = argv[1];
 	int num = 0;
 	char **names = getNames(filename, &num);
+	// for(int i = 0; i < num; i++) {
+	// 	printf("%s\n", *(names+i));
+	// }
+	struct tweeter tweeters[num];
+	int len = 0;
 	for(int i = 0; i < num; i++) {
-		printf("%s\n", *(names+i));
+		insert(*(names+i), tweeters, &len);
+	}
+	for(int i = 0; i < len; i++) {
+		printf("%d\n", (tweeters+i)->count);
+	}
+}
+
+void insert(char* name, struct tweeter *tweeters, int *len) {
+	for(int i = 0; i < *len; i++) {
+		if(strcmp(name, (tweeters+i)->name) == 0) { // found name
+			(tweeters+i)->count = (tweeters+i)->count + 1;
+			updateOrder(i, tweeters);
+			return; //return after updating everything
+		}
+	}
+	//if we made it this far, the name does not exist in the array
+	struct tweeter t = {name, 1};
+	*(tweeters+ *len) = t;
+	(*len)++;
+}
+
+void updateOrder(int current, struct tweeter *tweeters) {
+	if(current > 0) {
+		if ((tweeters+current-1)->count < (tweeters+current)->count) { //then swap them, and recurse
+			struct tweeter temp = *(tweeters+current-1);
+			*(tweeters+current-1) = *(tweeters+current);
+			*(tweeters+current) = temp;
+			updateOrder(current-1, tweeters);
+		}
 	}
 }
 
