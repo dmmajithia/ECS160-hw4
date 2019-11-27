@@ -16,7 +16,7 @@ void updateOrder(int current, struct tweeter *tweeters);
 
 int main(int argc, char *argv[]) {
 	char *filename = argv[1];
-	int num, len = 0;
+	int num, len = 0; // num = number of lines in file, len = number of unique usernames
 	struct tweeter tweeters[20000];
 	char *names[20000];
 	getNames(filename, &num, names);
